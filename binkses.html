@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binkses — Révision Terminale</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0e0e10;
+  --surface:#16161a;
+  --surface2:#1e1e24;
+  --border:#2a2a32;
+  --text:#f0f0f4;
+  --muted:#7a7a90;
+  --ses:#ff6b35;
+  --svt:#38d9a9;
+  --philo:#c084fc;
+  --hg:#60a5fa;
+  --maths:#fbbf24;
+  --ses-dim:#3d1a0c;
+  --svt-dim:#0c2e26;
+  --philo-dim:#1e1030;
+  --hg-dim:#0c1e38;
+  --maths-dim:#2e1f0a;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+h1,h2,h3,.brand{font-family:'Syne',sans-serif}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(14,14,16,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.brand{font-size:1.4rem;font-weight:800;letter-spacing:-0.03em;color:var(--text)}
+.brand span{color:var(--ses)}
+.nav-tabs{display:flex;gap:0}
+.nav-tab{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;padding:0.4rem 0.9rem;border-radius:6px;cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;text-transform:uppercase}
+.nav-tab:hover{color:var(--text);background:var(--surface2)}
+.nav-tab.active{color:var(--text);background:var(--surface2)}
+
+/* VIEWS */
+.view{display:none;animation:fadeUp 0.3s ease}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HOME */
+.home-hero{padding:3rem 1.5rem 2rem;border-bottom:1px solid var(--border)}
+.home-hero h1{font-size:clamp(2.2rem,6vw,3.5rem);font-weight:800;letter-spacing:-0.04em;line-height:1.05}
+.home-hero h1 em{font-style:normal;color:var(--ses)}
+.home-subtitle{color:var(--muted);margin-top:0.75rem;font-size:1rem;font-weight:300;max-width:420px}
+.subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border);margin:0}
+.subject-card{background:var(--bg);padding:1.5rem;cursor:pointer;transition:background 0.15s;position:relative;overflow:hidden}
+.subject-card:hover{background:var(--surface)}
+.subject-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.subject-card.ses::before{background:var(--ses)}
+.subject-card.svt::before{background:var(--svt)}
+.subject-card.philo::before{background:var(--philo)}
+.subject-card.hg::before{background:var(--hg)}
+.subject-card.maths::before{background:var(--maths)}
+.subject-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem}
+.subject-card.ses .subject-label{color:var(--ses)}
+.subject-card.svt .subject-label{color:var(--svt)}
+.subject-card.philo .subject-label{color:var(--philo)}
+.subject-card.hg .subject-label{color:var(--hg)}
+.subject-card.maths .subject-label{color:var(--maths)}
+.subject-name{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.25rem}
+.subject-count{font-size:0.8rem;color:var(--muted)}
+.subject-arrow{position:absolute;bottom:1rem;right:1rem;font-size:1.2rem;color:var(--border)}
+
+/* COURS */
+.page-header{padding:2rem 1.5rem 1.5rem;border-bottom:1px solid var(--border)}
+.breadcrumb{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.5rem;cursor:pointer;display:inline-flex;align-items:center;gap:0.3rem}
+.breadcrumb:hover{color:var(--text)}
+.page-title{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;letter-spacing:-0.03em}
+.chapter-list{padding:0}
+.chapter-item{border-bottom:1px solid var(--border);padding:1.25rem 1.5rem;cursor:pointer;transition:background 0.15s;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.chapter-item:hover{background:var(--surface)}
+.chapter-num{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.2rem}
+.chapter-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text)}
+.chapter-sub{font-size:0.8rem;color:var(--muted);margin-top:0.1rem}
+.chapter-badge{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;padding:0.2rem 0.6rem;border-radius:100px;font-weight:500;white-space:nowrap;flex-shrink:0}
+
+/* FICHE */
+.fiche-container{padding:1.5rem;max-width:800px}
+.fiche-header{border-radius:12px;padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.fiche-header.ses{background:var(--ses-dim);border:1px solid #ff6b3533}
+.fiche-header.svt{background:var(--svt-dim);border:1px solid #38d9a933}
+.fiche-header.philo{background:var(--philo-dim);border:1px solid #c084fc33}
+.fiche-header.hg{background:var(--hg-dim);border:1px solid #60a5fa33}
+.fiche-header.maths{background:var(--maths-dim);border:1px solid #fbbf2433}
+.fiche-matiere{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;font-weight:500;margin-bottom:0.5rem}
+.fiche-header.ses .fiche-matiere{color:var(--ses)}
+.fiche-header.svt .fiche-matiere{color:var(--svt)}
+.fiche-header.philo .fiche-matiere{color:var(--philo)}
+.fiche-header.hg .fiche-matiere{color:var(--hg)}
+.fiche-header.maths .fiche-matiere{color:var(--maths)}
+.fiche-title{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;letter-spacing:-0.03em;line-height:1.1;color:var(--text)}
+.fiche-section{background:var(--surface);border-radius:10px;padding:1.25rem;margin-bottom:1rem;border:1px solid var(--border)}
+.fiche-section-title{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.8rem}
+.fiche-section p{font-size:0.9rem;line-height:1.7;color:#c8c8d8;font-weight:300}
+.key-concept{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.15rem 0.5rem;font-size:0.8rem;margin:0.1rem;color:var(--text)}
+.def-grid{display:grid;gap:0.5rem}
+.def-item{background:var(--surface2);border-radius:8px;padding:0.75rem 1rem;border-left:3px solid}
+.def-term{font-weight:500;font-size:0.85rem;margin-bottom:0.2rem}
+.def-text{font-size:0.8rem;color:var(--muted);font-weight:300}
+
+/* AUTEURS */
+.auteurs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:var(--border);padding:0}
+.auteur-card{background:var(--bg);padding:1.25rem 1rem;cursor:pointer;transition:background 0.15s;text-align:center}
+.auteur-card:hover{background:var(--surface)}
+.auteur-avatar{width:72px;height:72px;border-radius:50%;margin:0 auto 0.75rem;overflow:hidden;border:2px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--muted)}
+.auteur-avatar img{width:100%;height:100%;object-fit:cover}
+.auteur-name{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:0.15rem;line-height:1.2}
+.auteur-field{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em}
+.auteur-tag{display:inline-block;font-size:0.6rem;padding:0.15rem 0.4rem;border-radius:4px;margin-top:0.4rem;font-weight:500;text-transform:uppercase;letter-spacing:0.06em}
+
+/* AUTEUR DETAIL */
+.auteur-detail{padding:1.5rem;max-width:720px}
+.auteur-hero{display:flex;align-items:flex-start;gap:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);margin-bottom:1.5rem}
+.auteur-hero-avatar{width:96px;height:96px;flex-shrink:0;border-radius:12px;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--muted)}
+.auteur-hero-avatar img{width:100%;height:100%;object-fit:cover}
+.auteur-hero-info{flex:1}
+.auteur-hero-name{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:0.3rem}
+.auteur-hero-dates{font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;font-weight:300}
+.concept-block{background:var(--surface);border-radius:10px;padding:1.25rem;margin-bottom:1rem;border:1px solid var(--border)}
+.concept-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:0.5rem}
+.concept-text{font-size:0.875rem;line-height:1.75;color:#c0c0d0;font-weight:300}
+.concept-quote{border-left:3px solid var(--philo);padding-left:0.75rem;margin:0.75rem 0;font-style:italic;color:var(--muted);font-size:0.85rem}
+
+/* BACK BTN */
+.back-btn{background:none;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.8rem;padding:0.4rem 0.9rem;border-radius:6px;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.4rem;margin-bottom:1rem}
+.back-btn:hover{border-color:var(--text);color:var(--text)}
+
+.auteurs-section-header{padding:0.75rem 1.5rem;border-bottom:1px solid var(--border);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);background:var(--surface)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">Bink<span>ses</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('home')">Accueil</button>
+    <button class="nav-tab" onclick="showView('cours')">Cours</button>
+    <button class="nav-tab" onclick="showView('auteurs')">Auteurs</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="view-home" class="view active">
+  <div class="home-hero">
+    <h1>Révise <em>efficacement</em>,<br>réussis le bac.</h1>
+    <p class="home-subtitle">Tous tes cours, fiches et auteurs au même endroit. Terminale Générale.</p>
+  </div>
+  <div class="subject-grid">
+    <div class="subject-card ses" onclick="showSubject('ses')">
+      <div class="subject-label">Spécialité</div>
+      <div class="subject-name">Sciences Économiques & Sociales</div>
+      <div class="subject-count">5 chapitres · 6 auteurs</div>
+      <div class="subject-arrow">→</div>
+    </div>
+    <div class="subject-card svt" onclick="showSubject('svt')">
+      <div class="subject-label">Spécialité</div>
+      <div class="subject-name">Sciences de la Vie et de la Terre</div>
+      <div class="subject-count">3 chapitres · 1 auteur</div>
+      <div class="subject-arrow">→</div>
+    </div>
+    <div class="subject-card philo" onclick="showSubject('philo')">
+      <div class="subject-label">Tronc commun</div>
+      <div class="subject-name">Philosophie</div>
+      <div class="subject-count">3 notions · 4 auteurs</div>
+      <div class="subject-arrow">→</div>
+    </div>
+    <div class="subject-card hg" onclick="showSubject('hg')">
+      <div class="subject-label">Tronc commun</div>
+      <div class="subject-name">Histoire-Géographie</div>
+      <div class="subject-count">2 thèmes</div>
+      <div class="subject-arrow">→</div>
+    </div>
+    <div class="subject-card maths" onclick="showSubject('maths')">
+      <div class="subject-label">Maths complémentaires</div>
+      <div class="subject-name">Mathématiques</div>
+      <div class="subject-count">2 chapitres</div>
+      <div class="subject-arrow">→</div>
+    </div>
+  </div>
+</div>
+
+<!-- COURS -->
+<div id="view-cours" class="view">
+  <div id="cours-subject-list"></div>
+  <div id="cours-chapter-detail" style="display:none"></div>
+</div>
+
+<!-- AUTEURS -->
+<div id="view-auteurs" class="view">
+  <div id="auteurs-grid-view"></div>
+  <div id="auteur-detail-view" style="display:none"></div>
+</div>
+
+<script>
+const SUBJECTS = {
+  ses:{name:'SES',full:'Sciences Économiques & Sociales',color:'ses',chapters:[
+    {id:'ses1',num:'01',title:'Comment les marchés fonctionnent-ils ?',sub:'Mécanismes de prix, concurrence, défaillances du marché',tags:['Marché','Prix','Concurrence'],content:{resume:"Le marché est un mécanisme de coordination décentralisé par les prix. L'équilibre se forme à l'intersection de l'offre et de la demande. Mais les marchés peuvent défaillir : externalités, biens publics, asymétries d'information.",notions:[{t:'Externalité',d:"Effet d'une activité économique sur un tiers non impliqué dans la transaction (pollution, vaccination…)"},{t:'Bien public',d:"Bien non rival et non excluable : sa consommation par l'un ne réduit pas celle des autres (ex : phare, défense nationale)"},{t:"Asymétrie d'information",d:"Situation où un agent dispose de plus d'informations que l'autre, pouvant mener à la sélection adverse ou l'aléa moral"}],auteurs:['Adam Smith','Akerlof']}},
+    {id:'ses2',num:'02',title:'Quelles sont les sources de la croissance économique ?',sub:'Facteurs de production, progrès technique, capital humain',tags:['Croissance','Innovation','Capital'],content:{resume:"La croissance est mesurée par le PIB. Elle résulte de l'accumulation des facteurs de production (capital, travail) et du progrès technique. Schumpeter insiste sur la destruction créatrice : l'innovation bouleverse les structures économiques.",notions:[{t:'PIB',d:"Produit Intérieur Brut : valeur totale des biens et services produits sur un territoire en un an"},{t:'Productivité globale des facteurs',d:"Mesure le progrès technique : part de la croissance non expliquée par le capital et le travail"},{t:'Destruction créatrice',d:"Processus schumpétérien où l'innovation détruit les anciennes structures pour en créer de nouvelles"}],auteurs:['Schumpeter','Solow']}},
+    {id:'ses3',num:'03',title:'Quelles politiques pour réguler les marchés ?',sub:'Politique de la concurrence, régulation, bien commun',tags:['Régulation','État','Politiques publiques'],content:{resume:"L'État intervient pour corriger les défaillances de marché. La politique de la concurrence vise à éviter les monopoles. La régulation s'applique aux industries de réseau.",notions:[{t:'Monopole naturel',d:"Situation où une seule entreprise peut fournir un bien à moindre coût grâce aux économies d'échelle"},{t:'Bien commun (Commons)',d:"Ressource rivale mais non excluable, sujette au risque de surexploitation (tragédie des communs)"},{t:"Internalisation des externalités",d:"Rendre les agents responsables des coûts sociaux de leurs activités (taxe carbone, quotas)"}],auteurs:['Pigou','Ostrom']}},
+    {id:'ses4',num:'04',title:'Comment expliquer les inégalités ?',sub:'Inégalités économiques, sociales, mobilité sociale',tags:['Inégalités','Capital social','Bourdieu'],content:{resume:"Les inégalités économiques (revenus, patrimoines) se cumulent avec les inégalités sociales (éducation, santé, culture). Bourdieu analyse la reproduction sociale : le capital culturel, social et économique se transmettent de génération en génération.",notions:[{t:'Capital culturel',d:"Ensemble des ressources culturelles héritées ou acquises (diplômes, savoirs, goûts) — concept de Bourdieu"},{t:'Capital social',d:"Ensemble des relations sociales et réseaux mobilisables — Bourdieu et Putnam"},{t:'Mobilité sociale',d:"Changement de position dans la hiérarchie sociale entre générations (intergénérationnelle) ou au cours d'une vie (intragénérationnelle)"}],auteurs:['Bourdieu','Weber','Kuznets']}},
+    {id:'ses5',num:'05',title:'Travail, emploi, chômage',sub:'Marché du travail, chômage, syndicats, salaire minimum',tags:['Emploi','Chômage','Salaire'],content:{resume:"Le chômage peut être frictionnel, structurel ou conjoncturel. Les institutions du marché du travail (SMIC, syndicats, conventions collectives) influencent l'emploi. Le débat porte sur la flexibilité vs protection.",notions:[{t:'Chômage frictionnel',d:"Chômage temporaire lié au délai de recherche d'emploi entre deux postes"},{t:'Chômage structurel',d:"Chômage lié à des inadéquations durables entre l'offre et la demande de travail (compétences, géographie)"},{t:'Chômage naturel',d:"Taux de chômage incompressible selon Friedman, correspondant à l'équilibre du marché du travail"}],auteurs:['Keynes','Friedman']}},
+  ]},
+  svt:{name:'SVT',full:'Sciences de la Vie et de la Terre',color:'svt',chapters:[
+    {id:'svt1',num:'01',title:'La glycémie et sa régulation',sub:'Homéostasie, insuline, glucagon, diabète',tags:['Glycémie','Homéostasie','Pancréas'],content:{resume:"La glycémie (taux de glucose dans le sang) est maintenue autour de 1g/L par un système de régulation précis impliquant le pancréas. C'est un exemple d'homéostasie.",notions:[{t:'Homéostasie',d:"Maintien d'un paramètre physiologique à une valeur constante malgré les variations du milieu"},{t:'Insuline',d:"Hormone hypoglycémiante sécrétée par les cellules β des îlots de Langerhans. Favorise le stockage du glucose (glycogénogénèse)"},{t:'Glucagon',d:"Hormone hyperglycémiante sécrétée par les cellules α. Favorise la libération de glucose (glycogénolyse)"}],auteurs:[]}},
+    {id:'svt2',num:'02',title:'Expression du génome et variation génétique',sub:'Transcription, traduction, mutations, sélection naturelle',tags:['Gène','ADN','Évolution'],content:{resume:"L'expression du génome passe par la transcription (ADN → ARNm) puis la traduction (ARNm → protéine). Les mutations modifient l'ADN et constituent la matière première de l'évolution.",notions:[{t:'Mutation',d:"Modification de la séquence nucléotidique de l'ADN. Peut être neutre, bénéfique ou délétère"},{t:'Sélection naturelle',d:"Mécanisme darwinien par lequel les individus les mieux adaptés survivent et se reproduisent davantage"},{t:'Dérive génétique',d:"Variation aléatoire des fréquences alléliques dans une population, surtout dans les petites populations"}],auteurs:['Darwin']}},
+    {id:'svt3',num:'03',title:'Immunologie',sub:'Immunité innée, adaptative, vaccination, anticorps',tags:['Immunité','Anticorps','Vaccination'],content:{resume:"L'organisme dispose de deux lignes de défense : l'immunité innée (rapide, non spécifique) et l'immunité adaptative (spécifique, avec mémoire). La vaccination exploite cette mémoire immunologique.",notions:[{t:'Lymphocyte T cytotoxique',d:"Cellule de l'immunité adaptative qui détruit les cellules infectées présentant l'antigène"},{t:'Anticorps',d:"Protéine produite par les lymphocytes B, capable de se lier spécifiquement à un antigène"},{t:'Mémoire immunitaire',d:"Persistance de lymphocytes mémoire après une infection, permettant une réponse plus rapide en cas de second contact"}],auteurs:[]}},
+  ]},
+  philo:{name:'Philosophie',full:'Philosophie',color:'philo',chapters:[
+    {id:'philo1',num:'01',title:'Le langage',sub:'Langage et pensée, parole et communication',tags:['Logos','Signe','Sens'],content:{resume:"Le langage est à la fois outil de communication et condition de la pensée. Pour Wittgenstein, les limites de mon langage sont les limites de mon monde. Saussure analyse le signe linguistique : signifiant/signifié.",notions:[{t:'Signe linguistique',d:"Unité composée d'un signifiant (image acoustique) et d'un signifié (concept) — Saussure"},{t:'Performatif',d:"Énoncé qui accomplit l'action qu'il décrit ('Je promets…') — Austin"},{t:'Logos',d:"Mot grec désignant à la fois la raison, le discours et la parole. Dimension universelle du langage humain"}],auteurs:['Saussure','Wittgenstein','Austin']}},
+    {id:'philo2',num:'02',title:'Le travail',sub:'Aliénation, technique, liberté et nécessité',tags:['Aliénation','Praxis','Technique'],content:{resume:"Le travail transforme la nature et l'homme lui-même. Marx distingue le travail aliéné (capitalisme) du travail libérateur. Hegel voit dans le travail de l'esclave le chemin vers la conscience de soi.",notions:[{t:'Aliénation',d:"Processus par lequel l'ouvrier est dépossédé du produit de son travail et de lui-même — Marx"},{t:'Plus-value',d:"Différence entre la valeur créée par le travailleur et le salaire qu'il reçoit — Marx"},{t:'Praxis',d:"Activité pratique transformant le monde et le sujet lui-même, chez Marx et Aristote"}],auteurs:['Marx','Hegel','Arendt']}},
+    {id:'philo3',num:'03',title:'La justice et le droit',sub:'Droit naturel, contrat social, justice sociale',tags:['Justice','Droit','Contrat'],content:{resume:"La justice peut être commutative (égalité stricte) ou distributive (proportionnalité). Rawls propose une théorie de la justice fondée sur le voile d'ignorance : choisir les règles sans savoir sa place dans la société.",notions:[{t:"Voile d'ignorance",d:"Dispositif de pensée de Rawls : on choisit les principes de justice sans connaître sa position sociale"},{t:'Contrat social',d:"Accord fondateur qui institue la société politique — Rousseau, Locke, Hobbes"},{t:"État de nature",d:"Fiction théorique décrivant l'état des hommes avant toute organisation politique"}],auteurs:['Rawls','Rousseau','Kant']}},
+  ]},
+  hg:{name:'HG',full:'Histoire-Géographie',color:'hg',chapters:[
+    {id:'hg1',num:'01',title:'Dynamiques de la mondialisation',sub:'Flux, acteurs, inégalités mondiales',tags:['Mondialisation','FTN','Commerce'],content:{resume:"La mondialisation désigne l'intensification des échanges à l'échelle mondiale (biens, services, capitaux, informations, individus). Les FTN (Firmes transnationales) en sont les principaux acteurs. Elle produit des inégalités spatiales.",notions:[{t:'FTN',d:"Firme Transnationale : entreprise dont l'activité s'étend sur plusieurs pays par des filiales et sous-traitants"},{t:'DIPP',d:"Décomposition Internationale des Processus Productifs : fragmentation de la production à l'échelle mondiale"},{t:'Littoralisation',d:"Concentration des activités économiques sur les littoraux, favorisées par les échanges maritimes"}],auteurs:[]}},
+    {id:'hg2',num:'02',title:'La France dans le monde',sub:'Influence, territoire, puissance',tags:['France','Puissance','DOM-TOM'],content:{resume:"La France est une puissance moyenne à rayonnement mondial grâce à sa langue, sa culture, son réseau diplomatique et son siège permanent au Conseil de sécurité de l'ONU. L'Outre-mer lui confère une présence sur tous les océans.",notions:[{t:'Soft power',d:"Puissance d'influence culturelle, idéologique et diplomatique, par opposition au hard power militaire"},{t:'Francophonie',d:"Ensemble des locuteurs du français et institution promouvant la langue et la coopération culturelle"},{t:'ZEE',d:"Zone Économique Exclusive : espace maritime de 200 miles où l'État dispose de droits souverains sur les ressources"}],auteurs:[]}},
+  ]},
+  maths:{name:'Maths',full:'Mathématiques complémentaires',color:'maths',chapters:[
+    {id:'maths1',num:'01',title:'Équations différentielles',sub:'Résolution, modélisation, applications',tags:['Équations','Dérivées','Modèles'],content:{resume:"Une équation différentielle lie une fonction à ses dérivées. Les équations du type y' = ay + b sont résolues par variation de la constante. Applications : croissance exponentielle, décroissance radioactive, loi de Newton du refroidissement.",notions:[{t:'Équation différentielle linéaire',d:"Équation de la forme y' = ay + b. Solution générale : combinaison de la solution homogène et d'une solution particulière"},{t:'Solution homogène',d:"Solution de y' = ay, de la forme Ce^(at) où C est une constante réelle"},{t:'Modèle de Malthus',d:"Croissance exponentielle d'une population : P(t) = P₀·e^(at), avec a le taux de croissance"}],auteurs:[]}},
+    {id:'maths2',num:'02',title:'Suites et récurrences',sub:'Suites arithmétiques, géométriques, convergence',tags:['Suites','Limites','Convergence'],content:{resume:"Une suite est une fonction définie sur ℕ. Les suites arithmétiques (raison r) et géométriques (raison q) ont des formules explicites. La convergence d'une suite est étudiée par le théorème des suites monotones bornées.",notions:[{t:'Suite arithmétique',d:"Suite où chaque terme est obtenu en ajoutant une constante r : uₙ = u₀ + nr"},{t:'Suite géométrique',d:"Suite où chaque terme est obtenu en multipliant par une constante q : uₙ = u₀·qⁿ"},{t:'Limite d\'une suite',d:"Valeur L telle que les termes de la suite s'en approchent indéfiniment quand n→+∞"}],auteurs:[]}},
+  ]}
+};
+
+const AUTEURS = [
+  {id:'marx',name:'Karl Marx',dates:'1818 — 1883',init:'KM',field:'Économie & Philosophie',subjects:['SES','Philo'],color:'ses',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Karl_Marx_001.jpg/800px-Karl_Marx_001.jpg',bio:"Philosophe, économiste et révolutionnaire allemand. Père du socialisme scientifique et du matérialisme historique.",concepts:[{t:'Aliénation',c:"Dans le mode de production capitaliste, l'ouvrier est aliéné : il ne possède pas les moyens de production, est séparé du produit de son travail, et des autres travailleurs. Le travail devient une activité étrangère à sa propre nature."},{t:'Plus-value',c:"La valeur d'une marchandise est déterminée par le temps de travail socialement nécessaire à sa production. Le capitaliste fait travailler l'ouvrier au-delà du temps nécessaire à reproduire son salaire : l'excédent est la plus-value."},{t:'Lutte des classes',c:"Toute l'histoire humaine est histoire de luttes entre classes antagonistes. Dans le capitalisme : bourgeoisie (possédants) vs prolétariat (travailleurs). La conscience de classe est une condition de l'émancipation."},{t:'Matérialisme historique',c:"L'infrastructure économique (forces et rapports de production) détermine la superstructure (droit, politique, religion, culture). L'histoire est un processus de contradictions matérielles."}],quote:"Les philosophes n'ont fait qu'interpréter le monde ; il s'agit maintenant de le transformer."},
+  {id:'weber',name:'Max Weber',dates:'1864 — 1920',init:'MW',field:'Sociologie',subjects:['SES'],color:'ses',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Max_Weber_1894.jpg/800px-Max_Weber_1894.jpg',bio:"Sociologue allemand fondateur de la sociologie compréhensive. Analyse les liens entre culture, religion et économie.",concepts:[{t:'Éthique protestante et esprit du capitalisme',c:"Weber montre que l'essor du capitalisme occidental est lié à l'éthique protestante (calvinisme). La prédestination pousse les croyants à chercher des signes de salut dans le succès matériel, favorisant l'accumulation rationnelle du capital."},{t:'Types de domination',c:"Weber distingue trois types de domination légitimes : traditionnelle (coutume), charismatique (qualités personnelles du chef), et rationnelle-légale (droit et règles impersonnelles). L'État moderne repose sur la domination rationnelle-légale."},{t:'Rationalisation',c:"Processus central de la modernité : extension de la logique calculatrice et des règles formelles à tous les domaines (économie, droit, administration). Weber y voit un 'désenchantement du monde'."},{t:'Idéal-type',c:"Outil méthodologique : construction mentale cohérente d'un phénomène pour le comparer au réel. L'idéal-type n'existe pas tel quel, il est un instrument d'analyse (ex: capitalisme idéal, bureaucratie)."}],quote:"La politique est le lent forage de planches dures."},
+  {id:'bourdieu',name:'Pierre Bourdieu',dates:'1930 — 2002',init:'PB',field:'Sociologie',subjects:['SES','Philo'],color:'ses',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Pierre_Bourdieu_%281%29.jpg/800px-Pierre_Bourdieu_%281%29.jpg',bio:"Sociologue français majeur du XXe siècle. Théoricien des mécanismes de domination et de reproduction sociale.",concepts:[{t:'Habitus',c:"Système de dispositions durables acquises par la socialisation. L'habitus génère des pratiques, des perceptions et des jugements cohérents avec la position sociale. Il est incorporé, inconscient et transférable d'un champ à l'autre."},{t:'Champ',c:"Espace social structuré par des positions et des luttes pour le capital spécifique de ce champ. Le champ économique, scolaire, artistique, politique ont chacun leurs règles et leurs enjeux propres."},{t:'Capital culturel',c:"Capital sous trois formes : incorporé (dispositions, compétences), objectivé (livres, tableaux), institutionnalisé (diplômes). Sa transmission explique la reproduction des inégalités scolaires malgré la méritocratie."},{t:'Reproduction sociale',c:"Mécanisme par lequel les inégalités sociales se perpétuent d'une génération à l'autre. L'école apparemment neutre reproduit les inégalités en valorisant l'arbitraire culturel des classes dominantes."}],quote:"La sociologie est un sport de combat."},
+  {id:'schumpeter',name:'Joseph Schumpeter',dates:'1883 — 1950',init:'JS',field:'Économie',subjects:['SES'],color:'ses',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Joseph_Schumpeter_economist.jpg/800px-Joseph_Schumpeter_economist.jpg',bio:"Économiste autrichien, théoricien de l'entrepreneuriat et de l'innovation comme moteur du capitalisme.",concepts:[{t:'Destruction créatrice',c:"Processus central du capitalisme : l'innovation détruit continuellement les structures économiques existantes pour en créer de nouvelles. Les entrepreneurs innovateurs bousculent les équilibres. Ce dynamisme explique à la fois la croissance et les crises."},{t:"L'entrepreneur innovateur",c:"Acteur central chez Schumpeter : ce n'est pas le capitaliste, mais l'entrepreneur qui prend le risque de l'innovation. Il introduit de nouveaux produits, procédés, marchés ou formes d'organisation, déclenchant un cycle expansif."},{t:"Vagues d'innovation",c:"Le développement économique suit des cycles longs (Kondratieff) liés à des grappes d'innovations : machine à vapeur, électricité, informatique… Chaque révolution technologique crée un cycle de croissance puis de crise."}],quote:"Le capitalisme est un processus évolutif, jamais stationnaire."},
+  {id:'rawls',name:'John Rawls',dates:'1921 — 2002',init:'JR',field:'Philosophie politique',subjects:['Philo'],color:'philo',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/John_Rawls.jpg/800px-John_Rawls.jpg',bio:"Philosophe américain, auteur de Théorie de la Justice (1971). Renouveau de la philosophie politique libérale.",concepts:[{t:"Voile d'ignorance",c:"Dispositif de pensée : pour choisir des principes de justice équitables, imaginons que nous ne sachions pas quelle place nous occuperons dans la société. Derrière ce voile, nous choisirions des principes protégeant les plus défavorisés."},{t:'Principe de différence',c:"Les inégalités sociales et économiques ne sont acceptables que si elles profitent aux membres les plus désavantagés de la société. L'égalité des chances doit être réelle, pas seulement formelle."},{t:'Biens premiers',c:"Ressources dont tout être rationnel a besoin pour réaliser son plan de vie : libertés fondamentales, opportunités, revenus, richesse, bases sociales du respect de soi."}],quote:"La justice est la première vertu des institutions sociales."},
+  {id:'rousseau',name:'Jean-Jacques Rousseau',dates:'1712 — 1778',init:'JR',field:'Philosophie',subjects:['Philo'],color:'philo',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Jean-Jacques_Rousseau_%28painted_portrait%29.jpg/800px-Jean-Jacques_Rousseau_%28painted_portrait%29.jpg',bio:"Philosophe des Lumières, théoricien du contrat social et de la volonté générale. Influence majeure sur la Révolution française.",concepts:[{t:'Contrat social',c:"Les hommes, en quittant l'état de nature, passent un pacte par lequel ils aliènent leurs droits naturels à la communauté. La souveraineté appartient au peuple, qui exprime la volonté générale."},{t:'Volonté générale',c:"Volonté qui vise l'intérêt commun, distincte de la volonté de tous (somme des intérêts particuliers). C'est sur elle que repose la légitimité politique."},{t:'Perfectibilité',c:"Faculté propre à l'homme de se développer et de se transformer. Pour Rousseau, l'histoire est une corruption progressive de la bonté naturelle par la société et la propriété privée."}],quote:"L'homme est né libre, et partout il est dans les fers."},
+  {id:'kant',name:'Emmanuel Kant',dates:'1724 — 1804',init:'EK',field:'Philosophie',subjects:['Philo'],color:'philo',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Immanuel_Kant_%28painted_portrait%29.jpg/800px-Immanuel_Kant_%28painted_portrait%29.jpg',bio:"Philosophe des Lumières allemand. Auteur de la Critique de la raison pure. Fondateur de la morale déontologique.",concepts:[{t:'Impératif catégorique',c:"Principe moral universel : agis uniquement d'après la maxime qui te permet de vouloir en même temps qu'elle devienne une loi universelle. La morale est inconditionnelle, indépendante des conséquences."},{t:'Autonomie de la volonté',c:"La liberté morale consiste à se donner sa propre loi (auto-nomos). L'homme moral n'obéit pas à ses penchants ou à une autorité extérieure, mais à la raison qu'il se donne lui-même."},{t:'Phénomène / noumène',c:"Kant distingue ce qui nous est accessible par l'expérience (phénomène) de la chose en soi (noumène), inaccessible. Nos connaissances sont limitées au monde phénoménal."}],quote:"Agis seulement d'après la maxime qui te permettrait de vouloir qu'elle soit une loi universelle."},
+  {id:'darwin',name:'Charles Darwin',dates:'1809 — 1882',init:'CD',field:'Biologie évolutive',subjects:['SVT'],color:'svt',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Charles_Darwin_seated_crop.jpg/800px-Charles_Darwin_seated_crop.jpg',bio:"Naturaliste britannique. Fondateur de la théorie de l'évolution par sélection naturelle.",concepts:[{t:'Sélection naturelle',c:"Les individus présentant des variations héréditaires favorables survivent et se reproduisent davantage dans leur environnement. Ces traits se répandent progressivement dans la population. C'est le mécanisme central de l'évolution."},{t:'Variation héréditaire',c:"Au sein d'une population, les individus présentent des variations phénotypiques. Celles qui sont héréditaires (transmises aux descendants) peuvent être soumises à la sélection."},{t:'Descendance avec modification',c:"Toutes les espèces vivantes descendent d'un ancêtre commun et se modifient graduellement au fil du temps. L'arbre du vivant représente ces relations de parenté."}],quote:"Ce n'est pas l'espèce la plus forte qui survit, mais celle qui s'adapte le mieux au changement."},
+];
+
+let currentSubject = null;
+let currentChapter = null;
+let currentAuteur = null;
+
+function showView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.nav-tab')[['home','cours','auteurs'].indexOf(v)].classList.add('active');
+  if(v==='cours'&&!currentChapter) renderSubjectList(currentSubject);
+  if(v==='auteurs'&&!currentAuteur) renderAuteurGrid();
+}
+
+function showSubject(s){
+  currentSubject=s;
+  currentChapter=null;
+  showView('cours');
+  renderSubjectList(s);
+}
+
+function renderSubjectList(s){
+  const sl=document.getElementById('cours-subject-list');
+  const cd=document.getElementById('cours-chapter-detail');
+  cd.style.display='none';
+  sl.style.display='block';
+  const subList=s?[SUBJECTS[s]]:Object.values(SUBJECTS);
+  let html='';
+  subList.forEach(sub=>{
+    const subKey=Object.keys(SUBJECTS).find(k=>SUBJECTS[k]===sub);
+    const accent=`var(--${sub.color})`;
+    html+=`<div class="page-header">
+      ${s?`<div class="breadcrumb" onclick="currentSubject=null;renderSubjectList(null)">← Toutes les matières</div>`:''}
+      <div class="page-title">${sub.full}</div>
+    </div><div class="chapter-list">`;
+    sub.chapters.forEach(ch=>{
+      html+=`<div class="chapter-item" onclick="showChapter('${ch.id}','${subKey}')">
+        <div>
+          <div class="chapter-num" style="color:${accent}">Chapitre ${ch.num}</div>
+          <div class="chapter-title">${ch.title}</div>
+          <div class="chapter-sub">${ch.sub}</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:180px">
+          ${ch.tags.map(t=>`<span class="chapter-badge" style="background:var(--${sub.color}-dim);color:${accent};border:1px solid ${accent}33">${t}</span>`).join('')}
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  sl.innerHTML=html;
+}
+
+function showChapter(chId,subKey){
+  const sub=SUBJECTS[subKey];
+  const ch=sub.chapters.find(c=>c.id===chId);
+  currentChapter=chId;
+  const sl=document.getElementById('cours-subject-list');
+  const cd=document.getElementById('cours-chapter-detail');
+  sl.style.display='none';
+  cd.style.display='block';
+  const accent=`var(--${sub.color})`;
+  const{resume,notions,auteurs}=ch.content;
+  cd.innerHTML=`<div class="fiche-container">
+    <button class="back-btn" onclick="currentChapter=null;document.getElementById('cours-chapter-detail').style.display='none';document.getElementById('cours-subject-list').style.display='block'">← Retour</button>
+    <div class="fiche-header ${sub.color}">
+      <div class="fiche-matiere">${sub.name} — Chapitre ${ch.num}</div>
+      <div class="fiche-title">${ch.title}</div>
+    </div>
+    <div class="fiche-section" style="border-top:3px solid ${accent}">
+      <div class="fiche-section-title" style="color:${accent}">Résumé du cours</div>
+      <p>${resume}</p>
+    </div>
+    <div class="fiche-section">
+      <div class="fiche-section-title" style="color:${accent}">Notions-clés à maîtriser</div>
+      <div class="def-grid">
+        ${notions.map(n=>`<div class="def-item" style="border-color:${accent}66"><div class="def-term">${n.t}</div><div class="def-text">${n.d}</div></div>`).join('')}
+      </div>
+    </div>
+    ${auteurs&&auteurs.length?`<div class="fiche-section">
+      <div class="fiche-section-title" style="color:${accent}">Auteurs associés</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${auteurs.map(a=>{const found=AUTEURS.find(au=>au.name.includes(a)||a.includes(au.name.split(' ')[1]));return found?`<span class="key-concept" onclick="openAuteurFromFiche('${found.id}')" style="cursor:pointer;border-color:${accent}44">👤 ${found.name}</span>`:`<span class="key-concept">${a}</span>`;}).join('')}
+      </div>
+    </div>`:''}
+  </div>`;
+}
+
+function openAuteurFromFiche(id){
+  showView('auteurs');
+  showAuteur(id);
+}
+
+function renderAuteurGrid(){
+  const gv=document.getElementById('auteurs-grid-view');
+  const dv=document.getElementById('auteur-detail-view');
+  dv.style.display='none';
+  gv.style.display='block';
+  const grouped={};
+  AUTEURS.forEach(a=>{a.subjects.forEach(s=>{if(!grouped[s])grouped[s]=[];grouped[s].push(a)})});
+  let html='';
+  Object.entries(grouped).forEach(([subj,authors])=>{
+    html+=`<div class="auteurs-section-header">${subj}</div><div class="auteurs-grid">`;
+    authors.forEach(a=>{
+      const accent=`var(--${a.color})`;
+      html+=`<div class="auteur-card" onclick="showAuteur('${a.id}')">
+        <div class="auteur-avatar"><img src="${a.img}" onerror="this.style.display='none';this.parentNode.innerHTML='${a.init}'" alt="${a.name}" loading="lazy"></div>
+        <div class="auteur-name">${a.name}</div>
+        <div class="auteur-field">${a.field}</div>
+        <div><span class="auteur-tag" style="background:var(--${a.color}-dim);color:${accent};border:1px solid ${accent}33">${a.dates.split('—')[0].trim()}</span></div>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  gv.innerHTML=html;
+}
+
+function showAuteur(id){
+  const a=AUTEURS.find(x=>x.id===id);
+  currentAuteur=id;
+  document.getElementById('auteurs-grid-view').style.display='none';
+  const dv=document.getElementById('auteur-detail-view');
+  dv.style.display='block';
+  const accent=`var(--${a.color})`;
+  dv.innerHTML=`<div class="auteur-detail">
+    <button class="back-btn" onclick="currentAuteur=null;document.getElementById('auteur-detail-view').style.display='none';renderAuteurGrid()">← Tous les auteurs</button>
+    <div class="auteur-hero">
+      <div class="auteur-hero-avatar"><img src="${a.img}" onerror="this.style.display='none';this.parentNode.innerHTML='${a.init}'" alt="${a.name}"></div>
+      <div class="auteur-hero-info">
+        <div class="auteur-hero-name">${a.name}</div>
+        <div class="auteur-hero-dates">${a.dates} · ${a.field}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:0.4rem">
+          ${a.subjects.map(s=>`<span class="auteur-tag" style="background:var(--${a.color}-dim);color:${accent};border:1px solid ${accent}33">${s}</span>`).join('')}
+        </div>
+        <p style="margin-top:0.75rem;font-size:0.85rem;color:var(--muted);font-weight:300;line-height:1.6">${a.bio}</p>
+      </div>
+    </div>
+    ${a.concepts.map(co=>`<div class="concept-block">
+      <div class="concept-title" style="border-left:3px solid ${accent};padding-left:0.6rem">${co.t}</div>
+      <p class="concept-text">${co.c}</p>
+    </div>`).join('')}
+    <div class="concept-block" style="border-left:3px solid ${accent}">
+      <div class="concept-quote">"${a.quote}"</div>
+    </div>
+  </div>`;
+}
+
+renderSubjectList(null);
+renderAuteurGrid();
+</script>
+</body>
+</html>
